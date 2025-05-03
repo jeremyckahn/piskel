@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const minimist = require('minimist');
 const childProcess = require('child_process');
-const phantomjs = require('phantomjs');
+const phantomjs = require('phantomjs-prebuilt');
 const binPath = phantomjs.path;
 
 // Parse command args
