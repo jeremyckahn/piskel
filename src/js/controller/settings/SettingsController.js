@@ -128,6 +128,12 @@
     this.settingsContainer.classList.add(EXP_DRAWER_CLS);
 
     this.isExpanded = true;
+
+    if (window.innerWidth <= 768 && pskl.app.mobileController) {
+      pskl.app.mobileController.updateBottomNav_(
+        setting === "export" ? "export" : "settings"
+      );
+    }
   };
 
   ns.SettingsController.prototype.closeDrawer_ = function () {
@@ -136,6 +142,10 @@
       document.body.classList.contains("mobile-tab-settings")
     ) {
       return;
+    }
+
+    if (pskl.app.mobileController) {
+      pskl.app.mobileController.updateBottomNav_(null);
     }
 
     pskl.utils.Dom.removeClass(SEL_SETTING_CLS);

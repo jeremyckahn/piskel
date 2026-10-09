@@ -78,15 +78,21 @@
 
     if (tab === "home") {
       document.body.classList.add("mobile-tab-home");
+      this.updateBottomNav_(null);
       $.publish(Events.CLOSE_SETTINGS_DRAWER);
     } else if (tab === "layers") {
       document.body.classList.add("mobile-tab-layers");
+      this.updateBottomNav_(null);
       $.publish(Events.CLOSE_SETTINGS_DRAWER);
     } else if (tab === "settings") {
       document.body.classList.add("mobile-tab-settings");
+      var settingToLoad =
+        optSetting ||
+        (pskl.app.settingsController &&
+          pskl.app.settingsController.currentSetting) ||
+        "user";
+      this.updateBottomNav_(settingToLoad === "export" ? "export" : "settings");
       if (pskl.app.settingsController) {
-        var settingToLoad =
-          optSetting || pskl.app.settingsController.currentSetting || "user";
         pskl.app.settingsController.loadSetting_(settingToLoad);
       }
     }
@@ -94,6 +100,22 @@
     if (pskl.app.drawingController) {
       pskl.app.drawingController.requestRelayout_();
     }
+  };
+
+  ns.MobileController.prototype.updateBottomNav_ = function (activeNav) {
+    if (!this.bottomNavContainer_) {
+      return;
+    }
+    var navItems = this.bottomNavContainer_.querySelectorAll(
+      ".mobile-bottom-nav-item"
+    );
+    navItems.forEach(function (item) {
+      if (activeNav && item.dataset.mobileNav === activeNav) {
+        item.classList.add("active");
+      } else {
+        item.classList.remove("active");
+      }
+    });
   };
 
   ns.MobileController.prototype.onTopTabClick_ = function (evt) {
