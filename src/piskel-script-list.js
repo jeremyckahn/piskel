@@ -159,6 +159,7 @@ exports.scripts = [
 
   // Dialogs controller
   "js/controller/dialogs/DialogsController.js",
+  "js/controller/MobileController.js",
 
   // Widgets
   "js/widgets/AnchorWidget.js",

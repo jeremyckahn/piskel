@@ -548,16 +548,49 @@
     );
   };
 
+  ns.DrawingController.prototype.isMobileLayout_ = function () {
+    return window.innerWidth <= 768;
+  };
+
   ns.DrawingController.prototype.getAvailableHeight_ = function () {
-    return document.querySelector("#main-wrapper").getBoundingClientRect()
-      .height;
+    var mainWrapperRect = document
+      .querySelector("#main-wrapper")
+      .getBoundingClientRect();
+    if (this.isMobileLayout_()) {
+      var mobileCanvasContainer = document.querySelector(
+        "#drawing-canvas-container"
+      );
+      if (mobileCanvasContainer) {
+        var rect = mobileCanvasContainer.getBoundingClientRect();
+        if (rect.height > 50) {
+          return rect.height;
+        }
+      }
+      return mainWrapperRect.height;
+    }
+    return mainWrapperRect.height;
   };
 
   ns.DrawingController.prototype.getSelectorWidth_ = function (selector) {
-    return document.querySelector(selector).getBoundingClientRect().width;
+    var el = document.querySelector(selector);
+    return el ? el.getBoundingClientRect().width : 0;
   };
 
   ns.DrawingController.prototype.getAvailableWidth_ = function () {
+    var mainWrapperWidth = this.getSelectorWidth_("#main-wrapper");
+    if (this.isMobileLayout_()) {
+      var mobileCanvasContainer = document.querySelector(
+        "#drawing-canvas-container"
+      );
+      if (mobileCanvasContainer) {
+        var rect = mobileCanvasContainer.getBoundingClientRect();
+        if (rect.width > 50) {
+          return rect.width;
+        }
+      }
+      return mainWrapperWidth;
+    }
+
     var leftSectionWidth = this.getSelectorWidth_(".left-column");
     var rightSectionWidth = this.getSelectorWidth_(".right-column");
     var toolsContainerWidth = this.getSelectorWidth_("#tool-section");
@@ -570,7 +603,7 @@
       rightSectionWidth +
       toolsContainerWidth +
       settingsContainerWidth;
-    var availableWidth = this.getSelectorWidth_("#main-wrapper") - usedWidth;
+    var availableWidth = mainWrapperWidth - usedWidth;
 
     var comfortMargin = 10;
     return availableWidth - comfortMargin;

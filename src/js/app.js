@@ -202,6 +202,11 @@
       );
       this.headerController.init();
 
+      this.mobileController = new pskl.controller.MobileController(
+        this.piskelController
+      );
+      this.mobileController.init();
+
       this.penSizeService = new pskl.service.pensize.PenSizeService();
       this.penSizeService.init();
 
