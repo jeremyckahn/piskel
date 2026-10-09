@@ -6,20 +6,12 @@
   };
 
   ns.MobileController.prototype.init = function () {
-    this.topTabsContainer_ = document.querySelector(".mobile-top-tabs");
     this.bottomNavContainer_ = document.querySelector(".mobile-bottom-nav");
     this.quickSaveBtn_ = document.querySelector(".mobile-quick-save-btn");
     this.quickSwatchesContainer_ = document.querySelector(
       ".mobile-quick-swatches"
     );
     this.brushSizeBtn_ = document.querySelector(".mobile-brush-size-btn");
-
-    if (this.topTabsContainer_) {
-      this.topTabsContainer_.addEventListener(
-        "click",
-        this.onTopTabClick_.bind(this)
-      );
-    }
 
     if (this.bottomNavContainer_) {
       this.bottomNavContainer_.addEventListener(
@@ -57,19 +49,6 @@
   };
 
   ns.MobileController.prototype.selectTab = function (tab, optSetting) {
-    if (!this.topTabsContainer_) {
-      return;
-    }
-
-    var allTabs = this.topTabsContainer_.querySelectorAll(".mobile-top-tab");
-    allTabs.forEach(function (t) {
-      if (t.dataset.mobileTab === tab) {
-        t.classList.add("active");
-      } else {
-        t.classList.remove("active");
-      }
-    });
-
     document.body.classList.remove(
       "mobile-tab-home",
       "mobile-tab-layers",
@@ -82,7 +61,7 @@
       $.publish(Events.CLOSE_SETTINGS_DRAWER);
     } else if (tab === "layers") {
       document.body.classList.add("mobile-tab-layers");
-      this.updateBottomNav_(null);
+      this.updateBottomNav_("transform");
       $.publish(Events.CLOSE_SETTINGS_DRAWER);
     } else if (tab === "settings") {
       document.body.classList.add("mobile-tab-settings");
@@ -118,16 +97,6 @@
     });
   };
 
-  ns.MobileController.prototype.onTopTabClick_ = function (evt) {
-    evt.stopPropagation();
-    var tabEl = evt.target.closest("[data-mobile-tab]");
-    if (!tabEl) {
-      return;
-    }
-
-    this.selectTab(tabEl.dataset.mobileTab);
-  };
-
   ns.MobileController.prototype.onBottomNavClick_ = function (evt) {
     evt.stopPropagation();
     var navEl = evt.target.closest("[data-mobile-nav]");
@@ -142,12 +111,10 @@
         dialogId: "browse-local"
       });
     } else if (navAction === "transform") {
-      this.selectTab("layers");
-      var transformContainer = document.querySelector(
-        ".transformations-container"
-      );
-      if (transformContainer) {
-        transformContainer.scrollIntoView({ behavior: "smooth" });
+      if (document.body.classList.contains("mobile-tab-layers")) {
+        this.selectTab("home");
+      } else {
+        this.selectTab("layers");
       }
     } else if (navAction === "palette") {
       // Open create/edit palette dialog
@@ -155,9 +122,25 @@
         dialogId: "create-palette"
       });
     } else if (navAction === "settings") {
-      this.selectTab("settings", "user");
+      if (
+        document.body.classList.contains("mobile-tab-settings") &&
+        pskl.app.settingsController &&
+        pskl.app.settingsController.currentSetting !== "export"
+      ) {
+        this.selectTab("home");
+      } else {
+        this.selectTab("settings", "user");
+      }
     } else if (navAction === "export") {
-      this.selectTab("settings", "export");
+      if (
+        document.body.classList.contains("mobile-tab-settings") &&
+        pskl.app.settingsController &&
+        pskl.app.settingsController.currentSetting === "export"
+      ) {
+        this.selectTab("home");
+      } else {
+        this.selectTab("settings", "export");
+      }
     }
   };
 

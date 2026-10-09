@@ -4,7 +4,6 @@
  * Desktop layout (> 768px) remains completely unchanged.
  */
 
-.mobile-top-tabs,
 .mobile-bottom-nav,
 .mobile-header-title,
 .mobile-quick-save-btn,
@@ -40,43 +39,6 @@
     overflow: hidden;
     display: flex;
     flex-direction: column;
-  }
-
-  /* Mobile Top Tabs */
-  .mobile-top-tabs {
-    order: 1;
-    display: flex !important;
-    background: #111;
-    border-bottom: 2px solid #222;
-    height: 44px;
-    flex-shrink: 0;
-  }
-
-  .mobile-top-tab {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: #2b2b2b;
-    color: #888;
-    font-size: 14px;
-    font-weight: bold;
-    border: 1px solid #1a1a1a;
-    border-top: none;
-    cursor: pointer;
-    user-select: none;
-    transition:
-      background 0.15s,
-      color 0.15s;
-    gap: 6px;
-  }
-
-  .mobile-top-tab.active {
-    background: #3a3a3a;
-    color: var(--highlight-color, #ffd700);
-    border: 2px solid var(--highlight-color, #ffd700);
-    border-bottom: none;
-    z-index: 10;
   }
 
   /* Main column wrapper structure */
@@ -149,47 +111,53 @@
   /* Left column (Frames) & Right column (Layers/Palettes/Transform/Preview) */
   .left-column {
     display: none;
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 50% !important;
-    z-index: 500;
-    background: #1e1e1e;
-    padding: 8px;
-    overflow-y: auto;
     width: 100% !important;
     box-sizing: border-box;
-    border-bottom: 2px solid #333;
   }
 
   .right-column {
     display: none;
-    position: absolute;
-    top: 50% !important;
-    left: 0;
-    right: 0;
-    bottom: 0 !important;
-    z-index: 500;
-    background: #1e1e1e;
-    padding: 8px;
-    overflow-y: auto;
     width: 100% !important;
     box-sizing: border-box;
   }
 
-  /* When Frames/Layers tab is active */
+  /* When Transform / Layers tab is active */
   body.mobile-tab-layers .left-column {
     display: block !important;
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    flex-shrink: 0 !important;
+    padding: 6px 8px !important;
+    background: #1a1a1a !important;
+    border-bottom: 2px solid #333 !important;
+    box-sizing: border-box !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   body.mobile-tab-layers .right-column {
-    display: block !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: static !important;
+    width: 100% !important;
+    flex: 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 8px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box !important;
+    background: #1e1e1e !important;
+    gap: 8px !important;
   }
 
   body.mobile-tab-layers .left-column .preview-list-scroller {
     overflow-x: auto !important;
     overflow-y: hidden !important;
+    -webkit-overflow-scrolling: touch;
   }
 
   body.mobile-tab-layers .left-column .preview-list {
@@ -197,7 +165,7 @@
     flex-direction: row !important;
     align-items: center !important;
     gap: 8px !important;
-    padding: 6px !important;
+    padding: 2px 4px !important;
   }
 
   body.mobile-tab-layers .left-column .preview-tile {
@@ -215,13 +183,58 @@
     align-items: center !important;
   }
 
-  body.mobile-tab-layers .right-column .transformations-container,
-  body.mobile-tab-layers .right-column .palettes-list-container {
-    display: none !important;
+  body.mobile-tab-layers #animated-preview-container {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    width: 100% !important;
+    background: #252525 !important;
+    border-radius: 4px !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  body.mobile-tab-layers .canvas-container-wrapper {
+    margin: 0 auto !important;
+  }
+
+  body.mobile-tab-layers #animated-preview-container > div:last-child {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 10px !important;
+    width: 100% !important;
+    margin-top: 8px !important;
   }
 
   body.mobile-tab-layers .right-column .layers-list-container {
     display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    background: #252525 !important;
+    border-radius: 4px !important;
+    padding: 6px 8px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  body.mobile-tab-layers .right-column .transformations-container {
+    display: block !important;
+    width: 100% !important;
+    background: #252525 !important;
+    border-radius: 4px !important;
+    padding: 6px 8px !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+    flex-shrink: 0 !important;
+  }
+
+  body.mobile-tab-layers .right-column .palettes-list-container,
+  body.mobile-tab-layers .right-column .cursor-coordinates {
+    display: none !important;
   }
 
   /* Hide drawing canvas and tool section on non-home tabs */
