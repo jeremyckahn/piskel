@@ -56,19 +56,19 @@
     this.updateBrushSizeBtn_();
   };
 
-  ns.MobileController.prototype.onTopTabClick_ = function (evt) {
-    evt.stopPropagation();
-    var tabEl = evt.target.closest("[data-mobile-tab]");
-    if (!tabEl) {
+  ns.MobileController.prototype.selectTab = function (tab, optSetting) {
+    if (!this.topTabsContainer_) {
       return;
     }
 
-    var tab = tabEl.dataset.mobileTab;
     var allTabs = this.topTabsContainer_.querySelectorAll(".mobile-top-tab");
     allTabs.forEach(function (t) {
-      t.classList.remove("active");
+      if (t.dataset.mobileTab === tab) {
+        t.classList.add("active");
+      } else {
+        t.classList.remove("active");
+      }
     });
-    tabEl.classList.add("active");
 
     document.body.classList.remove(
       "mobile-tab-home",
@@ -85,13 +85,25 @@
     } else if (tab === "settings") {
       document.body.classList.add("mobile-tab-settings");
       if (pskl.app.settingsController) {
-        pskl.app.settingsController.loadSetting_("user");
+        var settingToLoad =
+          optSetting || pskl.app.settingsController.currentSetting || "user";
+        pskl.app.settingsController.loadSetting_(settingToLoad);
       }
     }
 
     if (pskl.app.drawingController) {
       pskl.app.drawingController.requestRelayout_();
     }
+  };
+
+  ns.MobileController.prototype.onTopTabClick_ = function (evt) {
+    evt.stopPropagation();
+    var tabEl = evt.target.closest("[data-mobile-tab]");
+    if (!tabEl) {
+      return;
+    }
+
+    this.selectTab(tabEl.dataset.mobileTab);
   };
 
   ns.MobileController.prototype.onBottomNavClick_ = function (evt) {
@@ -108,14 +120,7 @@
         dialogId: "browse-local"
       });
     } else if (navAction === "transform") {
-      // Toggle transformations panel/popup or layers
-      var isLayers = document.body.classList.contains("mobile-tab-layers");
-      if (!isLayers) {
-        var layersTab = document.querySelector('[data-mobile-tab="layers"]');
-        if (layersTab) {
-          layersTab.click();
-        }
-      }
+      this.selectTab("layers");
       var transformContainer = document.querySelector(
         ".transformations-container"
       );
@@ -128,13 +133,9 @@
         dialogId: "create-palette"
       });
     } else if (navAction === "settings") {
-      if (pskl.app.settingsController) {
-        pskl.app.settingsController.loadSetting_("user");
-      }
+      this.selectTab("settings", "user");
     } else if (navAction === "export") {
-      if (pskl.app.settingsController) {
-        pskl.app.settingsController.loadSetting_("export");
-      }
+      this.selectTab("settings", "export");
     }
   };
 
@@ -142,9 +143,7 @@
     if (evt) {
       evt.stopPropagation();
     }
-    if (pskl.app.settingsController) {
-      pskl.app.settingsController.loadSetting_("save");
-    }
+    this.selectTab("settings", "save");
   };
 
   ns.MobileController.prototype.onBrushSizeClick_ = function () {
