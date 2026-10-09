@@ -1,6 +1,8 @@
-// This list is used both by the grunt build and index.html (in debug mode)
+// Single source of truth for JS load order.
+// At build time, the concat-scripts vite plugin reads this list to produce
+// the concatenated js/piskel-packaged-{version}.js bundle.
 
-(typeof exports != "undefined" ? exports : pskl_exports).scripts = [
+exports.scripts = [
   // Core libraries
   "js/lib/jquery-1.8.0.js",
   "js/lib/jquery-ui-1.10.3.custom.js",
@@ -48,7 +50,7 @@
   "js/utils/serialization/backward/Deserializer_v0.js",
   "js/utils/serialization/backward/Deserializer_v1.js",
 
-    // GIF Encoding libraries
+  // GIF Encoding libraries
   "js/lib/gif/gif.worker.js",
   "js/lib/gif/gif.js",
   "js/lib/gif/libgif.js",
@@ -56,15 +58,8 @@
   // JSZip https://github.com/Stuk/jszip
   "js/lib/jszip/jszip.min.js",
 
-  "js/lib/scrollifneeded/scrollifneeded.js",
-  // Smoothscroll: https://github.com/iamdustan/smoothscroll
-  "js/lib/smoothscroll/smoothscroll.js",
-
   // Spectrum color-picker library
   "js/lib/spectrum/spectrum.js",
-
-  // Promises
-  "js/lib/q.js",
 
   // Application libraries
   "js/rendering/DrawingLoop.js",
@@ -204,7 +199,6 @@
   "js/service/keyboard/Shortcuts.js",
   "js/service/keyboard/ShortcutService.js",
   "js/service/ImportService.js",
-  "js/service/ImageUploadService.js",
   "js/service/ClipboardService.js",
   "js/service/CurrentColorsService.js",
   "js/service/FileDropperService.js",

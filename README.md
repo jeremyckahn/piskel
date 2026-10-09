@@ -1,7 +1,7 @@
-Piskel
+Piskel 
 ======
 
-[![Travis Status](https://api.travis-ci.org/piskelapp/piskel.png?branch=master)](https://travis-ci.org/piskelapp/piskel) [![Built with Grunt](https://cdn.gruntjs.com/builtwith.png)](https://gruntjs.com/)
+[![E2E Tests](https://github.com/piskelapp/piskel/actions/workflows/ci.yml/badge.svg?branch=master)](https://github.com/piskelapp/piskel/actions/workflows/ci.yml)
 
 Piskel is an easy-to-use sprite editor. It can be used to create game sprites, animations, pixel-art...
 It is the editor used in **[piskelapp.com](https://www.piskelapp.com)**.
@@ -25,6 +25,7 @@ We also use the following **libraries** :
 * [canvas-toBlob](https://github.com/eligrey/canvas-toBlob.js/) : shim for canvas toBlob
 * [jquery](https://jquery.com/) : used sporadically in the application
 * [bootstrap-tooltip](https://getbootstrap.com/javascript/#tooltips) : nice tooltips
+* [playwright](https://playwright.dev/): End to end testing
 
 As well as some **icons** from the [Noun Project](https://thenounproject.com/) :
 * Folder by Simple Icons from The Noun Project
@@ -36,7 +37,7 @@ Piskel supports the following browsers:
 * **Chrome** (latest)
 * **Firefox** (latest)
 * **Edge** (latest)
-* **Internet Explorer** 11
+* **Brave** (latest) but **only if canvas fingerprinting is disabled** ([more info](https://github.com/piskelapp/piskel/wiki/About-canvas%E2%80%90based-browser-fingerprinting-and-Brave-browser))
 
 ### Mobile/Tablets
 
@@ -48,10 +49,26 @@ Offline builds are available. More details in the [dedicated wiki page](https://
 
 ## Contributing ?
 
-Help is always welcome !
+### Reporting an issue
 
-* **Issues** : Found a problem when using the application, want to request a feature, [open an issue](https://github.com/piskelapp/piskel/issues).
-* **Development** : Have a look at the [wiki](https://github.com/piskelapp/piskel/wiki) to set up the development environment
+Found a problem when using the application, want to request a feature, [open an issue](https://github.com/piskelapp/piskel/issues).
+ 
+### About PR contributions
+
+#### PR Contributions we accept
+- Small, straightforward fixes (documentation updates, typos, incorrect strings, minor bugs): only a few words or lines.
+
+#### PR Contributions we are unlikely to merge/review
+- Large or complex bug fixes that are spread across multiple areas of the codebase
+- Major refactors that require significant testing, validation, or architectural discussion
+- Pull requests that modify the user experience or introduce new features
+
+You are still welcome to open a PR, but please note that complex or UX-impacting changes are unlikely to be reviewed or merged due to limited time and resources.
+
+### Setting up Development environment
+Have a look at the [wiki](https://github.com/piskelapp/piskel/wiki) to set up the development environment.
+
+
 
 ## License
 

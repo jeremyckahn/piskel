@@ -7,7 +7,7 @@
 - prepare the release
   - in `piskel-website` clone, checkout the `master` branch, not the `release`. The release branch is similar to the master branch, except it doesn't ignore the statics files coming from the `piskel` project. The idea is that we can easily checkout the release branch to do a new release, without having to rebuild piskel, in case nothing changed in piskel itself. We will switch to the release branch when we perform the final release.
   - in `piskel` clone, create a new branch for the release `git checkout -b vX.Y`
-  - build and copy piskel to piskel-website (assumes the clones are in the same folder) `grunt && node bin/copy-to-piskel-website.js`
+  - build and copy piskel to piskel-website (assumes the clones are in the same folder) `npm run release`
 - local test
   - start piskel-website in the Google app engine launcher, test manually the update
   - if any issue is detected create a commit to fix it (on the `vX.Y` branch) and push it.

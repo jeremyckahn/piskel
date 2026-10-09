@@ -1,5 +1,5 @@
 (function () {
-  var ns = $.namespace('pskl.service');
+  var ns = $.namespace("pskl.service");
 
   var ONE_SECOND = 1000;
   var ONE_MINUTE = 60 * ONE_SECOND;
@@ -24,9 +24,11 @@
   };
 
   ns.BackupService.prototype.init = function () {
-    this.backupDatabase.init().then(function () {
-      window.setInterval(this.backup.bind(this), BACKUP_INTERVAL);
-    }.bind(this));
+    this.backupDatabase.init().then(
+      function () {
+        window.setInterval(this.backup.bind(this), BACKUP_INTERVAL);
+      }.bind(this)
+    );
   };
 
   // This is purely exposed for testing, so that backup dates can be set programmatically.
@@ -40,7 +42,7 @@
 
     // Do not save an unchanged piskel
     if (hash === this.lastHash) {
-      return Q.resolve();
+      return Promise.resolve();
     }
 
     // Update the hash
@@ -62,50 +64,72 @@
       serialized: pskl.utils.serialization.Serializer.serialize(piskel)
     };
 
-    return this.getSnapshotsBySessionId(pskl.app.sessionId).then(function (snapshots) {
-      var latest = snapshots[0];
+    return this.getSnapshotsBySessionId(pskl.app.sessionId)
+      .then(
+        function (snapshots) {
+          var latest = snapshots[0];
 
-      if (latest && date < this.nextSnapshotDate) {
-        // update the latest snapshot
-        snapshot.id = latest.id;
-        return this.backupDatabase.updateSnapshot(snapshot);
-      } else {
-        // add a new snapshot
-        this.nextSnapshotDate = date + SNAPSHOT_INTERVAL;
-        return this.backupDatabase.createSnapshot(snapshot).then(function () {
-          if (snapshots.length >= MAX_SNAPSHOTS_PER_SESSION) {
-            // remove oldest snapshot
-            return this.backupDatabase.deleteSnapshot(snapshots[snapshots.length - 1]);
+          if (latest && date < this.nextSnapshotDate) {
+            // update the latest snapshot
+            snapshot.id = latest.id;
+            return this.backupDatabase.updateSnapshot(snapshot);
+          } else {
+            // add a new snapshot
+            this.nextSnapshotDate = date + SNAPSHOT_INTERVAL;
+            return this.backupDatabase
+              .createSnapshot(snapshot)
+              .then(
+                function () {
+                  if (snapshots.length >= MAX_SNAPSHOTS_PER_SESSION) {
+                    // remove oldest snapshot
+                    return this.backupDatabase.deleteSnapshot(
+                      snapshots[snapshots.length - 1]
+                    );
+                  }
+                }.bind(this)
+              )
+              .then(
+                function () {
+                  var isNewSession = !latest;
+                  if (!isNewSession) {
+                    return;
+                  }
+                  return this.backupDatabase.getSessions().then(
+                    function (sessions) {
+                      if (sessions.length <= MAX_SESSIONS) {
+                        // If MAX_SESSIONS has not been reached, no need to delete
+                        // previous sessions.
+                        return;
+                      }
+
+                      // Prepare an array containing all the ids of the sessions to be deleted.
+                      var sessionIdsToDelete = sessions
+                        .sort(function (s1, s2) {
+                          return s1.startDate - s2.startDate;
+                        })
+                        .map(function (s) {
+                          return s.id;
+                        })
+                        .slice(0, sessions.length - MAX_SESSIONS);
+
+                      // Delete all the extra sessions.
+                      return Promise.all(
+                        sessionIdsToDelete.map(
+                          function (id) {
+                            return this.deleteSession(id);
+                          }.bind(this)
+                        )
+                      );
+                    }.bind(this)
+                  );
+                }.bind(this)
+              );
           }
-        }.bind(this)).then(function () {
-          var isNewSession = !latest;
-          if (!isNewSession) {
-            return;
-          }
-          return this.backupDatabase.getSessions().then(function (sessions) {
-            if (sessions.length <= MAX_SESSIONS) {
-              // If MAX_SESSIONS has not been reached, no need to delete
-              // previous sessions.
-              return;
-            }
-
-            // Prepare an array containing all the ids of the sessions to be deleted.
-            var sessionIdsToDelete = sessions.sort(function (s1, s2) {
-              return s1.startDate - s2.startDate;
-            }).map(function (s) {
-              return s.id;
-            }).slice(0, sessions.length - MAX_SESSIONS);
-
-            // Delete all the extra sessions.
-            return Q.all(sessionIdsToDelete.map(function (id) {
-              return this.deleteSession(id);
-            }.bind(this)));
-          }.bind(this));
-        }.bind(this));
-      }
-    }.bind(this)).catch(function (e) {
-      console.error(e);
-    });
+        }.bind(this)
+      )
+      .catch(function (e) {
+        console.error(e);
+      });
   };
 
   ns.BackupService.prototype.getSnapshotsBySessionId = function (sessionId) {
@@ -122,40 +146,40 @@
     });
   };
 
-  ns.BackupService.prototype.list = function() {
+  ns.BackupService.prototype.list = function () {
     return this.backupDatabase.getSessions();
   };
 
-  ns.BackupService.prototype.loadSnapshotById = function(snapshotId) {
-    var deferred = Q.defer();
-
-    this.backupDatabase.getSnapshot(snapshotId).then(function (snapshot) {
-      pskl.utils.serialization.Deserializer.deserialize(
-        JSON.parse(snapshot.serialized),
-        function (piskel) {
-          pskl.app.piskelController.setPiskel(piskel);
-          deferred.resolve();
-        }
-      );
-    });
-
-    return deferred.promise;
+  ns.BackupService.prototype.loadSnapshotById = function (snapshotId) {
+    return new Promise(
+      function (resolve) {
+        this.backupDatabase.getSnapshot(snapshotId).then(function (snapshot) {
+          pskl.utils.serialization.Deserializer.deserialize(
+            JSON.parse(snapshot.serialized),
+            function (piskel) {
+              pskl.app.piskelController.setPiskel(piskel);
+              resolve();
+            }
+          );
+        });
+      }.bind(this)
+    );
   };
 
   // Load "latest" backup snapshot.
-  ns.BackupService.prototype.load = function() {
-    var deferred = Q.defer();
-
-    this.getPreviousPiskelInfo().then(function (snapshot) {
-      pskl.utils.serialization.Deserializer.deserialize(
-        JSON.parse(snapshot.serialized),
-        function (piskel) {
-          pskl.app.piskelController.setPiskel(piskel);
-          deferred.resolve();
-        }
-      );
-    });
-
-    return deferred.promise;
+  ns.BackupService.prototype.load = function () {
+    return new Promise(
+      function (resolve) {
+        this.getPreviousPiskelInfo().then(function (snapshot) {
+          pskl.utils.serialization.Deserializer.deserialize(
+            JSON.parse(snapshot.serialized),
+            function (piskel) {
+              pskl.app.piskelController.setPiskel(piskel);
+              resolve();
+            }
+          );
+        });
+      }.bind(this)
+    );
   };
 })();

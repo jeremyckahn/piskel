@@ -1,6 +1,8 @@
-// This list is used both by the grunt build and index.html (in debug mode)
+// Single source of truth for CSS load order.
+// At build time, the concat-scripts vite plugin reads this list to produce
+// the concatenated css/piskel-style-packaged-{version}.css bundle.
 
-(typeof exports != "undefined" ? exports : pskl_exports).styles = [
+exports.styles = [
   "css/variables.css",
   "css/reset.css",
   "css/style.css",

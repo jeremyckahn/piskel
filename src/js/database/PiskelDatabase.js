@@ -1,15 +1,15 @@
 (function () {
-  var ns = $.namespace('pskl.database');
+  var ns = $.namespace("pskl.database");
 
-  var DB_NAME = 'PiskelDatabase';
+  var DB_NAME = "PiskelDatabase";
   var DB_VERSION = 1;
 
   // Simple wrapper to promisify a request.
   var _requestPromise = function (req) {
-    var deferred = Q.defer();
-    req.onsuccess = deferred.resolve.bind(deferred);
-    req.onerror = deferred.reject.bind(deferred);
-    return deferred.promise;
+    return new Promise(function (resolve, reject) {
+      req.onsuccess = resolve;
+      req.onerror = reject;
+    });
   };
 
   /**
@@ -26,10 +26,12 @@
     var request = window.indexedDB.open(DB_NAME, DB_VERSION);
     request.onupgradeneeded = this.onUpgradeNeeded_.bind(this);
 
-    return _requestPromise(request).then(function (event) {
-      this.db = event.target.result;
-      return this.db;
-    }.bind(this));
+    return _requestPromise(request).then(
+      function (event) {
+        this.db = event.target.result;
+        return this.db;
+      }.bind(this)
+    );
   };
 
   ns.PiskelDatabase.prototype.onUpgradeNeeded_ = function (event) {
@@ -37,14 +39,14 @@
     this.db = event.target.result;
 
     // Create an object store "piskels" with the autoIncrement flag set as true.
-    var objectStore = this.db.createObjectStore('piskels', { keyPath : 'name' });
-    objectStore.transaction.oncomplete = function(event) {
+    var objectStore = this.db.createObjectStore("piskels", { keyPath: "name" });
+    objectStore.transaction.oncomplete = function (event) {
       pskl.database.migrate.MigrateLocalStorageToIndexedDb.migrate(this);
     }.bind(this);
   };
 
   ns.PiskelDatabase.prototype.openObjectStore_ = function () {
-    return this.db.transaction(['piskels'], 'readwrite').objectStore('piskels');
+    return this.db.transaction(["piskels"], "readwrite").objectStore("piskels");
   };
 
   /**
@@ -69,38 +71,42 @@
    * needs to be retrieved with a separate get.
    */
   ns.PiskelDatabase.prototype.list = function () {
-    var deferred = Q.defer();
-
     var piskels = [];
     var objectStore = this.openObjectStore_();
     var cursor = objectStore.openCursor();
-    cursor.onsuccess = function(event) {
-      var cursor = event.target.result;
-      if (cursor) {
-        piskels.push({
-          name: cursor.value.name,
-          date: cursor.value.date,
-          description: cursor.value.description
-        });
-        cursor.continue();
-      } else {
-        // Cursor consumed all availabled piskels
-        deferred.resolve(piskels);
-      }
-    };
 
-    cursor.onerror = function () {
-      deferred.reject();
-    };
+    return new Promise(function (resolve, reject) {
+      cursor.onsuccess = function (event) {
+        var cursor = event.target.result;
+        if (cursor) {
+          piskels.push({
+            name: cursor.value.name,
+            date: cursor.value.date,
+            description: cursor.value.description
+          });
+          cursor.continue();
+        } else {
+          // Cursor consumed all availabled piskels
+          resolve(piskels);
+        }
+      };
 
-    return deferred.promise;
+      cursor.onerror = function () {
+        reject();
+      };
+    });
   };
 
   /**
    * Send an put request for the provided args.
    * Returns a promise that resolves the request event.
    */
-  ns.PiskelDatabase.prototype.update = function (name, description, date, serialized) {
+  ns.PiskelDatabase.prototype.update = function (
+    name,
+    description,
+    date,
+    serialized
+  ) {
     var data = {};
 
     data.name = name;
@@ -116,7 +122,12 @@
    * Send an add request for the provided args.
    * Returns a promise that resolves the request event.
    */
-  ns.PiskelDatabase.prototype.create = function (name, description, date, serialized) {
+  ns.PiskelDatabase.prototype.create = function (
+    name,
+    description,
+    date,
+    serialized
+  ) {
     var data = {};
 
     data.name = name;
