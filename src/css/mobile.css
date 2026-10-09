@@ -721,12 +721,383 @@
 
   /* Dialogs adjustments for mobile */
   #dialog-container-wrapper {
-    padding: 10px !important;
+    padding: 0 !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
   }
 
-  #dialog-container {
+  #dialog-container,
+  #dialog-container.create-palette,
+  .show #dialog-container,
+  .show #dialog-container.create-palette {
+    position: fixed !important;
+    top: 10px !important;
+    bottom: 10px !important;
+    left: 10px !important;
+    right: 10px !important;
+    width: auto !important;
+    max-width: calc(100% - 20px) !important;
+    height: auto !important;
+    max-height: calc(100% - 20px) !important;
+    margin: 0 !important;
+    margin-left: 0 !important;
+    margin-top: 0 !important;
+    transform: none !important;
+    border-radius: 6px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important;
+    background: #2b2b2b !important;
+    border: 2px solid var(--highlight-color, #ffd700) !important;
+    box-sizing: border-box !important;
+  }
+
+  .dialog-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
     width: 100% !important;
-    max-width: 100% !important;
+    overflow: hidden !important;
+    position: relative !important;
+  }
+
+  .dialog-head {
+    height: 42px !important;
+    min-height: 42px !important;
+    font-size: 16px !important;
+    padding: 8px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    flex-shrink: 0 !important;
+    box-sizing: border-box !important;
+    background: var(--highlight-color, #ffd700) !important;
+    color: #000 !important;
+  }
+
+  .dialog-title {
+    font-size: 16px !important;
+    font-weight: bold !important;
+    line-height: 26px !important;
+    color: #000 !important;
+  }
+
+  .dialog-close {
+    position: static !important;
+    line-height: 26px !important;
+    margin: 0 !important;
+    font-size: 20px !important;
+    font-weight: bold !important;
+    cursor: pointer !important;
+    padding: 0 4px !important;
+    color: #000 !important;
+  }
+
+  /* Create Palette Dialog for mobile */
+  .dialog-create-palette {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    height: calc(100% - 42px) !important;
+    min-height: 0 !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    padding: 10px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    font-size: 13px !important;
+  }
+
+  .create-palette-section {
+    position: static !important;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    align-items: center !important;
+    width: 100% !important;
+    margin: 0 0 8px 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .create-palette-name-label {
+    width: auto !important;
+    font-size: 13px !important;
+    font-weight: bold !important;
+    color: #eee !important;
+    line-height: 32px !important;
+    margin-right: 4px !important;
+  }
+
+  .create-palette-name-input {
+    flex: 1 !important;
+    min-width: 120px !important;
+    height: 32px !important;
+    font-size: 13px !important;
+    background: #1a1a1a !important;
+    color: #fff !important;
+    border: 1px solid #444 !important;
+    border-radius: 3px !important;
+    padding: 4px 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  .create-palette-import-section {
+    display: flex !important;
+    gap: 6px !important;
+    width: 100% !important;
+  }
+
+  .create-palette-import-button,
+  .create-palette-download-button {
+    flex: 1 !important;
+    height: 32px !important;
+    min-height: 32px !important;
+    font-size: 11px !important;
+    padding: 0 6px !important;
+    margin: 0 !important;
+    white-space: nowrap !important;
+    line-height: 30px !important;
+    box-sizing: border-box !important;
+  }
+
+  .colors-container {
+    position: static !important;
+    display: flex !important;
+    flex-direction: column !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
+    flex-shrink: 0 !important;
+    border: 1px solid #444 !important;
+    background: #222 !important;
+    border-radius: 4px !important;
+    margin-bottom: 8px !important;
+    box-sizing: border-box !important;
+  }
+
+  .colors-list {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 52px !important;
+    max-height: 105px !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    display: flex !important;
+    flex-wrap: wrap !important;
+    align-content: flex-start !important;
+    padding: 6px !important;
+    gap: 6px !important;
+    background: #2a2a2a !important;
+    border-bottom: 2px solid #383838 !important;
+    box-sizing: border-box !important;
+    margin: 0 !important;
+  }
+
+  .create-palette-color,
+  .create-palette-new-color,
+  .colors-list-drop-proxy {
+    float: none !important;
+    width: 38px !important;
+    height: 38px !important;
+    min-width: 38px !important;
+    margin: 0 !important;
+    border-radius: 3px !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+    flex-shrink: 0 !important;
+  }
+
+  .create-palette-remove-color {
+    opacity: 0.6 !important;
+    font-size: 13px !important;
+    line-height: 14px !important;
+    width: 16px !important;
+    height: 16px !important;
+    text-align: center !important;
+    top: 0 !important;
+    right: 0 !important;
+  }
+
+  .create-palette-color.selected .create-palette-remove-color {
+    opacity: 1 !important;
+    color: #fff !important;
+    background: rgba(220, 50, 50, 0.9) !important;
+    border-radius: 50% !important;
+    top: -4px !important;
+    right: -4px !important;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.5) !important;
+  }
+
+  .create-palette-new-color {
+    line-height: 34px !important;
+    font-size: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .color-picker-container {
+    position: static !important;
+    width: 100% !important;
+    height: auto !important;
+    background: #1e1e1e !important;
+    padding: 8px !important;
+    box-sizing: border-box !important;
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 4px !important;
+    margin: 0 !important;
+  }
+
+  .color-picker-spectrum {
+    width: 100% !important;
+    margin-bottom: 4px !important;
+  }
+
+  .create-palette .sp-container {
+    width: 100% !important;
+    padding: 0 !important;
+    touch-action: none !important;
+    box-sizing: border-box !important;
+    position: relative !important;
+  }
+
+  .create-palette .sp-top {
+    width: 100% !important;
+    height: 120px !important;
+    position: relative !important;
+    display: block !important;
+  }
+
+  .create-palette .sp-fill {
+    padding-top: 0 !important;
+    height: 120px !important;
+  }
+
+  .create-palette .sp-color {
+    right: 44px !important;
+    height: 120px !important;
+    position: absolute !important;
+    top: 0 !important;
+    left: 0 !important;
+    bottom: 0 !important;
+  }
+
+  .create-palette .sp-hue {
+    left: auto !important;
+    right: 0 !important;
+    width: 36px !important;
+    height: 120px !important;
+    position: absolute !important;
+    top: 0 !important;
+    bottom: 0 !important;
+  }
+
+  .color-picker-input {
+    order: 1 !important;
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 !important;
+    height: 32px !important;
+    margin: 2px 0 !important;
+    width: 100% !important;
+  }
+
+  .color-picker-input .textfield {
+    width: 100% !important;
+    height: 32px !important;
+    font-size: 14px !important;
+    text-align: center !important;
+    font-family: monospace !important;
+    font-weight: bold !important;
+    box-sizing: border-box !important;
+  }
+
+  .color-preview {
+    order: 2 !important;
+    width: 100% !important;
+    height: 24px !important;
+    min-height: 24px !important;
+    margin: 2px 0 4px 0 !important;
+    border: 1px solid #555 !important;
+    border-radius: 3px !important;
+    box-sizing: border-box !important;
+  }
+
+  .color-picker-slider {
+    display: flex !important;
+    align-items: center !important;
+    padding: 0 !important;
+    height: 24px !important;
+    margin: 1px 0 !important;
+    gap: 6px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+    order: 3 !important;
+  }
+
+  .color-picker-slider span {
+    width: 16px !important;
+    font-weight: bold !important;
+    color: #ccc !important;
+    float: none !important;
+    text-align: center !important;
+    line-height: 24px !important;
+    font-size: 13px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .color-picker-slider input[type="range"] {
+    flex: 1 !important;
+    width: auto !important;
+    float: none !important;
+    height: 14px !important;
+    margin: 0 !important;
+    touch-action: pan-y !important;
+  }
+
+  .color-picker-slider input[type="text"] {
+    width: 48px !important;
+    height: 24px !important;
+    float: none !important;
+    margin: 0 !important;
+    font-size: 12px !important;
+    text-align: center !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+  }
+
+  .color-picker-container > br {
+    display: none !important;
+  }
+
+  .create-palette-actions {
+    position: sticky !important;
+    bottom: -10px !important;
+    display: flex !important;
+    justify-content: flex-end !important;
+    align-items: center !important;
+    gap: 8px !important;
+    width: calc(100% + 20px) !important;
+    height: auto !important;
+    padding: 8px 10px !important;
+    margin: auto -10px -10px -10px !important;
+    background: #2b2b2b !important;
+    border-top: 1px solid #3e3e3e !important;
+    box-sizing: border-box !important;
+    flex-shrink: 0 !important;
+    z-index: 10 !important;
+  }
+
+  .create-palette-actions .button {
+    height: 36px !important;
+    min-height: 36px !important;
+    padding: 6px 16px !important;
+    font-size: 13px !important;
+    margin: 0 !important;
+    box-sizing: border-box !important;
   }
 
   /* Disable hover tooltips on mobile */
