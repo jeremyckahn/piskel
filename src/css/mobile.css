@@ -9,7 +9,8 @@
 .mobile-quick-save-btn,
 .mobile-quick-swatches,
 .mobile-brush-size-btn,
-.mobile-coordinates {
+.mobile-coordinates,
+.palette-tab-panel {
   display: none !important;
 }
 
@@ -237,9 +238,13 @@
     display: none !important;
   }
 
-  /* Hide drawing canvas and tool section on non-home tabs */
+  /* Hide drawing canvas and tool section on non-canvas tabs */
   body.mobile-tab-layers .main-column,
   body.mobile-tab-layers #tool-section,
+  body.mobile-tab-transform .main-column,
+  body.mobile-tab-transform #tool-section,
+  body.mobile-tab-palette .column-wrapper,
+  body.mobile-tab-palette #tool-section,
   body.mobile-tab-settings .column-wrapper,
   body.mobile-tab-settings #tool-section {
     display: none !important;
@@ -730,6 +735,72 @@
     height: 34px !important;
     font-size: 13px !important;
     box-sizing: border-box !important;
+  }
+
+  /* Palette Tab Panel for mobile */
+  #palette-tab-panel {
+    display: none !important;
+  }
+
+  body.mobile-tab-palette #palette-tab-panel {
+    order: 2 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    position: static !important;
+    flex: 1 !important;
+    width: 100% !important;
+    height: 100% !important;
+    background: #1e1e1e !important;
+    overflow-y: auto !important;
+    -webkit-overflow-scrolling: touch;
+    box-sizing: border-box !important;
+    padding: 10px !important;
+  }
+
+  body.mobile-tab-palette #palette-tab-panel .dialog-wrapper {
+    display: flex !important;
+    flex-direction: column !important;
+    height: 100% !important;
+    width: 100% !important;
+    position: static !important;
+  }
+
+  body.mobile-tab-palette #palette-tab-panel .dialog-head {
+    height: 38px !important;
+    min-height: 38px !important;
+    padding: 6px 12px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: flex-start !important;
+    background: #252525 !important;
+    border-radius: 4px !important;
+    margin-bottom: 8px !important;
+    color: var(--highlight-color, #ffd700) !important;
+    box-sizing: border-box !important;
+  }
+
+  body.mobile-tab-palette #palette-tab-panel .dialog-title {
+    font-size: 14px !important;
+    font-weight: bold !important;
+    color: var(--highlight-color, #ffd700) !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.5px !important;
+    line-height: normal !important;
+  }
+
+  body.mobile-tab-palette #palette-tab-panel .dialog-close {
+    display: none !important;
+  }
+
+  body.mobile-tab-palette #palette-tab-panel .dialog-create-palette {
+    display: flex !important;
+    flex-direction: column !important;
+    flex: 1 !important;
+    height: auto !important;
+    min-height: 0 !important;
+    padding: 0 !important;
+    position: static !important;
+    font-size: 13px !important;
   }
 
   /* Dialogs adjustments for mobile */

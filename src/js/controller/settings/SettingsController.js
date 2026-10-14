@@ -144,10 +144,6 @@
       return;
     }
 
-    if (pskl.app.mobileController) {
-      pskl.app.mobileController.updateBottomNav_(null);
-    }
-
     pskl.utils.Dom.removeClass(SEL_SETTING_CLS);
     this.settingsContainer.classList.remove(EXP_DRAWER_CLS);
 

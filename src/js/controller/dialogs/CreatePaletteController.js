@@ -8,20 +8,26 @@
 
   pskl.utils.inherit(ns.CreatePaletteController, ns.AbstractDialogController);
 
-  ns.CreatePaletteController.prototype.init = function (paletteId) {
-    this.superclass.init.call(this);
+  ns.CreatePaletteController.prototype.init = function (
+    paletteId,
+    optContainer
+  ) {
+    this.superclass.init.call(this, optContainer);
+    this.container = optContainer || document;
 
-    this.hiddenFileInput = document.querySelector(
+    this.hiddenFileInput = this.container.querySelector(
       ".create-palette-import-input"
     );
-    this.nameInput = document.querySelector('input[name="palette-name"]');
+    this.nameInput = this.container.querySelector('input[name="palette-name"]');
 
-    var buttonsContainer = document.querySelector(".create-palette-actions");
-    var deleteButton = document.querySelector(".create-palette-delete");
-    var downloadButton = document.querySelector(
+    var buttonsContainer = this.container.querySelector(
+      ".create-palette-actions"
+    );
+    var deleteButton = this.container.querySelector(".create-palette-delete");
+    var downloadButton = this.container.querySelector(
       ".create-palette-download-button"
     );
-    var importFileButton = document.querySelector(
+    var importFileButton = this.container.querySelector(
       ".create-palette-import-button"
     );
 
@@ -40,7 +46,7 @@
       this.onImportFileButtonClick_
     );
 
-    var colorsListContainer = document.querySelector(".colors-container");
+    var colorsListContainer = this.container.querySelector(".colors-container");
     this.colorsListWidget = new pskl.widgets.ColorsList(colorsListContainer);
 
     var palette;

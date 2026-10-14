@@ -7,6 +7,7 @@
 
   ns.MobileController.prototype.init = function () {
     this.bottomNavContainer_ = document.querySelector(".mobile-bottom-nav");
+    this.paletteTabPanel_ = document.querySelector("#palette-tab-panel");
     this.quickSaveBtn_ = document.querySelector(".mobile-quick-save-btn");
     this.quickSwatchesContainer_ = document.querySelector(
       ".mobile-quick-swatches"
@@ -46,23 +47,51 @@
 
     this.updateQuickSwatches_();
     this.updateBrushSizeBtn_();
+
+    this.paletteController_ = null;
+    this.selectTab("canvas");
   };
 
   ns.MobileController.prototype.selectTab = function (tab, optSetting) {
+    if (tab === "home") {
+      tab = "canvas";
+    } else if (tab === "layers") {
+      tab = "transform";
+    }
+
+    this.currentTab_ = tab;
+
     document.body.classList.remove(
       "mobile-tab-home",
+      "mobile-tab-canvas",
       "mobile-tab-layers",
+      "mobile-tab-transform",
+      "mobile-tab-palette",
       "mobile-tab-settings"
     );
 
-    if (tab === "home") {
-      document.body.classList.add("mobile-tab-home");
-      this.updateBottomNav_(null);
+    // Clean up palette controller if leaving palette tab
+    if (tab !== "palette" && this.paletteController_) {
+      this.paletteController_.destroy();
+      this.paletteController_ = null;
+      if (this.paletteTabPanel_) {
+        this.paletteTabPanel_.innerHTML = "";
+      }
+    }
+
+    if (tab === "canvas") {
       $.publish(Events.CLOSE_SETTINGS_DRAWER);
-    } else if (tab === "layers") {
-      document.body.classList.add("mobile-tab-layers");
+      document.body.classList.add("mobile-tab-home", "mobile-tab-canvas");
+      this.updateBottomNav_("canvas");
+    } else if (tab === "transform") {
+      $.publish(Events.CLOSE_SETTINGS_DRAWER);
+      document.body.classList.add("mobile-tab-layers", "mobile-tab-transform");
       this.updateBottomNav_("transform");
+    } else if (tab === "palette") {
       $.publish(Events.CLOSE_SETTINGS_DRAWER);
+      document.body.classList.add("mobile-tab-palette");
+      this.updateBottomNav_("palette");
+      this.loadPaletteTab_();
     } else if (tab === "settings") {
       document.body.classList.add("mobile-tab-settings");
       var settingToLoad =
@@ -74,11 +103,42 @@
       if (pskl.app.settingsController) {
         pskl.app.settingsController.loadSetting_(settingToLoad);
       }
+    } else if (tab === "export") {
+      document.body.classList.add("mobile-tab-settings");
+      this.updateBottomNav_("export");
+      if (pskl.app.settingsController) {
+        pskl.app.settingsController.loadSetting_("export");
+      }
     }
 
     if (pskl.app.drawingController) {
       pskl.app.drawingController.requestRelayout_();
     }
+  };
+
+  ns.MobileController.prototype.loadPaletteTab_ = function () {
+    if (!this.paletteTabPanel_) {
+      return;
+    }
+
+    var template = pskl.utils.Template.get(
+      "templates/dialogs/create-palette.html"
+    );
+    this.paletteTabPanel_.innerHTML = template;
+
+    var selectedPaletteId = pskl.UserSettings.get(
+      pskl.UserSettings.SELECTED_PALETTE
+    );
+
+    this.paletteController_ =
+      new pskl.controller.dialogs.CreatePaletteController(
+        this.piskelController
+      );
+    this.paletteController_.onCloseCallback = function () {
+      this.selectTab("canvas");
+    }.bind(this);
+
+    this.paletteController_.init(selectedPaletteId, this.paletteTabPanel_);
   };
 
   ns.MobileController.prototype.updateBottomNav_ = function (activeNav) {
@@ -105,42 +165,16 @@
     }
 
     var navAction = navEl.dataset.mobileNav;
-    if (navAction === "menu") {
-      // Toggle cheatsheet or browse backups dialog
-      $.publish(Events.DIALOG_SHOW, {
-        dialogId: "browse-local"
-      });
+    if (navAction === "canvas") {
+      this.selectTab("canvas");
     } else if (navAction === "transform") {
-      if (document.body.classList.contains("mobile-tab-layers")) {
-        this.selectTab("home");
-      } else {
-        this.selectTab("layers");
-      }
+      this.selectTab("transform");
     } else if (navAction === "palette") {
-      // Open create/edit palette dialog
-      $.publish(Events.DIALOG_SHOW, {
-        dialogId: "create-palette"
-      });
+      this.selectTab("palette");
     } else if (navAction === "settings") {
-      if (
-        document.body.classList.contains("mobile-tab-settings") &&
-        pskl.app.settingsController &&
-        pskl.app.settingsController.currentSetting !== "export"
-      ) {
-        this.selectTab("home");
-      } else {
-        this.selectTab("settings", "user");
-      }
+      this.selectTab("settings", "user");
     } else if (navAction === "export") {
-      if (
-        document.body.classList.contains("mobile-tab-settings") &&
-        pskl.app.settingsController &&
-        pskl.app.settingsController.currentSetting === "export"
-      ) {
-        this.selectTab("home");
-      } else {
-        this.selectTab("settings", "export");
-      }
+      this.selectTab("settings", "export");
     }
   };
 
