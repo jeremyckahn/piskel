@@ -727,10 +727,33 @@
   }
 
   #application-action-section .button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
     min-height: 38px !important;
     padding: 8px 16px !important;
     font-size: 13px !important;
     box-sizing: border-box !important;
+    text-align: center !important;
+  }
+
+  /* Export panel styling for mobile */
+  .export-panel-section {
+    padding: 8px 10px !important;
+    margin-top: 12px !important;
+  }
+
+  .export-panel-row {
+    display: flex !important;
+    align-items: center !important;
+  }
+
+  .export-panel-gif .button,
+  .export-panel-png .button {
+    width: auto !important;
+    min-width: 95px !important;
+    margin-right: 12px !important;
+    flex-shrink: 0 !important;
   }
 
   #application-action-section .textfield {
