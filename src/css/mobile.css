@@ -753,6 +753,7 @@
     width: 100% !important;
     height: 100% !important;
     background: #1e1e1e !important;
+    overflow-x: hidden !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
     box-sizing: border-box !important;
@@ -803,6 +804,7 @@
     padding: 0 !important;
     position: static !important;
     font-size: 13px !important;
+    overflow-x: hidden !important;
   }
 
   /* Dialogs adjustments for mobile */
@@ -887,6 +889,7 @@
     flex: 1 !important;
     height: calc(100% - 42px) !important;
     min-height: 0 !important;
+    overflow-x: hidden !important;
     overflow-y: auto !important;
     -webkit-overflow-scrolling: touch;
     padding: 10px !important;
@@ -1161,15 +1164,15 @@
 
   .create-palette-actions {
     position: sticky !important;
-    bottom: -10px !important;
+    bottom: 0 !important;
     display: flex !important;
     justify-content: flex-end !important;
     align-items: center !important;
     gap: 8px !important;
-    width: calc(100% + 20px) !important;
+    width: 100% !important;
     height: auto !important;
-    padding: 8px 10px !important;
-    margin: auto -10px -10px -10px !important;
+    padding: 8px 0 !important;
+    margin: auto 0 0 0 !important;
     background: #2b2b2b !important;
     border-top: 1px solid #3e3e3e !important;
     box-sizing: border-box !important;
