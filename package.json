@@ -1,5 +1,5 @@
 {
-  "name": "piskel",
+  "name": "@jeremyckahn/piskel",
   "version": "0.15.2-SNAPSHOT",
   "description": "Pixel art editor",
   "author": "Julian Descottes <julian.descottes@gmail.com>",
@@ -11,6 +11,9 @@
   "repository": {
     "type": "git",
     "url": "http://github.com/piskelapp/piskel.git"
+  },
+  "publishConfig": {
+    "access": "public"
   },
   "files": [
     "dest/prod",
