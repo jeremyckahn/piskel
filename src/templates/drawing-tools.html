@@ -29,11 +29,23 @@
           data-test-id="pen-size-4"
         ></div>
       </div>
-      <ul
-        id="tools-container"
-        class="tools-wrapper"
-        data-test-id="tools-container"
-      ><!-- Drawing tools will be inserted here --></ul>
+      <div class="mobile-tools-row">
+        <ul
+          id="tools-container"
+          class="tools-wrapper"
+          data-test-id="tools-container"
+        ><!-- Drawing tools will be inserted here --></ul>
+        <div
+          class="mobile-brush-size-btn"
+          data-action="toggle-brush-size"
+          title="Brush Size"
+        >
+          <div class="mobile-brush-size-icon">
+            <span class="brush-size-dot dot-size-1"></span>
+          </div>
+          <span class="mobile-brush-size-label">Brush Size</span>
+        </div>
+      </div>
       <div class="palette-wrapper">
         <div
           class="tool-icon tool-color-picker"
@@ -68,6 +80,7 @@
           rel="tooltip"
           data-placement="right"
         ></div>
+        <div class="mobile-quick-swatches"></div>
       </div>
     </div>
   </div>

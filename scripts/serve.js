@@ -20,9 +20,10 @@ const { exec } = require('child_process');
 const isTest = process.argv.includes('--test');
 const PORT = 9001;
 const ROOT = path.resolve(__dirname, '..', 'dest/prod');
-const EXTRA_ROOTS = isTest
-  ? [path.resolve(__dirname, '..', 'tests/e2e/data')]
-  : [path.resolve(__dirname, '..', 'test')];
+const EXTRA_ROOTS = [
+  path.resolve(__dirname, '..', 'tests/e2e/data'),
+  path.resolve(__dirname, '..', 'test'),
+];
 
 const MIME_TYPES = {
   '.html': 'text/html', '.js': 'text/javascript', '.css': 'text/css',

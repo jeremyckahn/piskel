@@ -71,7 +71,9 @@
     if (this.currentSetting != setting) {
       this.loadSetting_(setting);
     } else {
-      this.closeDrawer_();
+      if (window.innerWidth > 768) {
+        this.closeDrawer_();
+      }
     }
 
     evt.stopPropagation();
@@ -79,6 +81,10 @@
   };
 
   ns.SettingsController.prototype.onBodyClick_ = function (evt) {
+    if (window.innerWidth <= 768) {
+      return;
+    }
+
     var target = evt.target;
 
     var isInDrawerContainer = pskl.utils.Dom.isParent(
@@ -122,9 +128,22 @@
     this.settingsContainer.classList.add(EXP_DRAWER_CLS);
 
     this.isExpanded = true;
+
+    if (window.innerWidth <= 768 && pskl.app.mobileController) {
+      pskl.app.mobileController.updateBottomNav_(
+        setting === "export" ? "export" : "settings"
+      );
+    }
   };
 
   ns.SettingsController.prototype.closeDrawer_ = function () {
+    if (
+      window.innerWidth <= 768 &&
+      document.body.classList.contains("mobile-tab-settings")
+    ) {
+      return;
+    }
+
     pskl.utils.Dom.removeClass(SEL_SETTING_CLS);
     this.settingsContainer.classList.remove(EXP_DRAWER_CLS);
 

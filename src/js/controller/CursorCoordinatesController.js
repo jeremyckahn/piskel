@@ -12,6 +12,9 @@
 
   ns.CursorCoordinatesController.prototype.init = function () {
     this.coordinatesContainer = document.querySelector(".cursor-coordinates");
+    this.mobileCoordinatesContainer = document.querySelector(
+      ".mobile-coordinates"
+    );
 
     $.subscribe(Events.CURSOR_MOVED, this.onCursorMoved_.bind(this));
     $.subscribe(Events.DRAG_START, this.onDragStart_.bind(this));
@@ -48,8 +51,15 @@
       html += '<div class="drawing-zoom">x' + zoom + "</div>";
     }
 
-    this.coordinatesContainer.innerHTML =
+    var content =
       this.getFrameSizeHTML_() + html + this.getCurrentFrameIndexHTML_();
+
+    if (this.coordinatesContainer) {
+      this.coordinatesContainer.innerHTML = content;
+    }
+    if (this.mobileCoordinatesContainer) {
+      this.mobileCoordinatesContainer.innerHTML = content;
+    }
   };
 
   ns.CursorCoordinatesController.prototype.getCurrentFrameIndexHTML_ =

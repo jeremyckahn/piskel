@@ -41,7 +41,13 @@
   ns.MouseStateService.prototype.onMouseEvent_ = function (evt, mouseEvent) {
     if (mouseEvent.type == "mousedown") {
       this.lastButtonPressed_ = mouseEvent.button;
-    } else if (mouseEvent.type == "mouseup") {
+    } else if (mouseEvent.type == "touchstart") {
+      this.lastButtonPressed_ = Constants.LEFT_BUTTON;
+    } else if (
+      mouseEvent.type == "mouseup" ||
+      mouseEvent.type == "touchend" ||
+      mouseEvent.type == "touchcancel"
+    ) {
       this.lastButtonPressed_ = BUTTON_UNSET;
     }
   };
